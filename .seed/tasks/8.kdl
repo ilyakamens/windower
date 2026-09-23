@@ -1,9 +1,10 @@
-task id=8 status=in-progress {
+task id=8 status=done {
     title "Fix repeated Accessibility prompts after rebuilds"
     created "2026-09-23T11:04:42.233574+00:00"
-    modified "2026-09-23T11:05:55.302528+00:00"
+    modified "2026-09-23T11:08:49.497413+00:00"
     description "Prevent shortcut-triggered permission prompt loops, explain stale ad-hoc signing permissions, install the final fixed build, and restore access through user-approved System Settings controls."
     log {
         entry ts="2026-09-23T11:05:55.302487+00:00" "Compared installed and previously working bundles: ad-hoc designated requirements use different cdhash values. Removed permission prompts from shortcut failures and limited automatic prompting to first launch with a persisted flag. Documented stale-grant recovery. Formatting lint, seven unit tests, release build, signature verification, and diff checks pass. Installed final fixed build and quit app. User asked to remove/re-add the installed app in Device Control and Data Access and verify a shortcut; awaiting runtime confirmation."
+        entry ts="2026-09-23T11:08:49.478089+00:00" "User confirmed the permission-refresh steps are complete. Removed the duplicate build app from Finder search by moving it to Trash; retained ~/Applications/Windower.app."
     }
 }
