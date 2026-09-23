@@ -1,0 +1,10 @@
+task id=5 status=done {
+    title "Add native app icon"
+    created "2026-09-23T10:50:34.894463+00:00"
+    modified "2026-09-23T10:53:22.409049+00:00"
+    description "Create a window-layout app icon, package the ICNS resource, update the installed app, and verify its registered icon."
+    log {
+        entry ts="2026-09-23T10:52:32.025211+00:00" "Created reproducible vector app artwork and multi-resolution ICNS. Added CFBundleIconFile and build packaging, updated README, installed and restarted app. Seven tests, release build, signing, plist, and shell syntax checks pass. NSWorkspace resolves the installed app to the new icon; checking System Settings cache."
+        entry ts="2026-09-23T10:53:22.388498+00:00" "Verified the new icon visually in System Settings after refreshing the icon cache and privacy settings extension. Windower remains enabled. Installed app is running."
+    }
+}

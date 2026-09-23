@@ -1,0 +1,10 @@
+task id=4 status=done {
+    title "Build native macOS window manager"
+    created "2026-09-23T10:38:14.755498+00:00"
+    modified "2026-09-23T10:48:42.213072+00:00"
+    description "Replace web starter with a native Apple Silicon menu bar app. Control-Option-Command arrows fill the corresponding screen half; C centers at 75% of usable width and height; M fills the usable screen. Include Accessibility setup, launch at login, build/install scripts, and geometry tests."
+    log {
+        entry ts="2026-09-23T10:44:14.502452+00:00" "Implemented native Swift/AppKit app without external dependencies. Installed arm64 app in ~/Applications and confirmed running process and successful first-launch login registration. User enabled Accessibility. Seven geometry tests, Swift formatting lint, release build, code-signature verification, plist validation, and shell syntax checks pass. Automated app-targeted key events did not verify global hotkeys; physical-keyboard confirmation requested. Multiple displays and reboot behavior are not runtime-tested."
+        entry ts="2026-09-23T10:48:42.213062+00:00" "User confirmed all six shortcuts work with physical keyboard input and Launch at Login is checked. Runtime shortcut verification complete; actual logout/reboot and multiple-display behavior remain untested."
+    }
+}

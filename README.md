@@ -1,60 +1,68 @@
 # Windower
 
-Windower is a monorepo with a Svelte 5 + TypeScript + Vite + Tailwind CSS + Ky + Oxc frontend (`client/`) and an
-optional language-agnostic backend (`server/`).
+A native Apple Silicon menu bar app for moving and resizing the focused window.
+Requires macOS 13 or later. No Rosetta or third-party runtime.
 
-Shared agent instructions live in `AGENTS.md`; `CLAUDE.md` references that file.
+| Shortcut | Action |
+| --- | --- |
+| Control–Option–Command–← | Left half |
+| Control–Option–Command–→ | Right half |
+| Control–Option–Command–↑ | Top half |
+| Control–Option–Command–↓ | Bottom half |
+| Control–Option–Command–C | Center at 75% of screen width and height |
+| Control–Option–Command–M | Fill screen |
 
-## Environment Setup
+Actions use the display containing most of the window and respect the menu bar
+and Dock. Fill Screen resizes the window in the current desktop; it does not enter
+macOS full screen. All actions are also available from the menu bar icon.
 
-This project uses [mise](https://mise.jdx.dev/) for Node version management and
-[portless](https://github.com/vercel-labs/portless) for stable `https://*.localhost`
-dev URLs (so multiple projects don't fight over ports).
+## Install
+
+With Xcode or its Command Line Tools installed:
 
 ```sh
-# Install mise (if not already installed)
-curl https://mise.run | sh
-
-# Install Node and pnpm
-mise trust
-mise install
-pnpm i
-
-# Install portless globally (binds :443, prompts once to trust a local CA)
-pnpm add -g portless
-
-# Add the following to ~/.zshrc:
-source ~/dev/windower/bin/env
+./scripts/install.sh
 ```
 
-> **Note on `pnpm add -g`.** pnpm is managed by mise here, so **don't run
-> `pnpm setup`** — it installs a standalone pnpm that shadows the mise version
-> and will drift out of sync. If `pnpm add -g portless` errors with
-> `ERR_PNPM_NO_GLOBAL_BIN_DIR`, add these lines to `~/.zshrc` (after the
-> `mise activate` line) and reload your shell instead:
->
-> ```sh
-> export PNPM_HOME="$HOME/.local/share/pnpm"
-> export PATH="$PNPM_HOME:$PATH"
-> ```
+This builds an arm64 app, installs it at `~/Applications/Windower.app`, and opens it.
+Grant **Windower** access in **System Settings → Privacy & Security → Accessibility**.
+The menu's **Enable Accessibility…** item opens that pane. Permission takes effect
+without restarting the app.
 
-## Recommended IDE Setup
+Launch at Login is enabled on first launch. The menu toggle controls it afterward;
+if macOS requires approval, use **Approve Launch at Login…**. Startup occurs when
+you log in, when windows are available, rather than before login.
 
-[VSCode](https://code.visualstudio.com/) + [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode)
+Quit SizeUp or disable any conflicting shortcuts before running Windower. Quit
+Windower from its menu before reinstalling.
 
 ## Development
 
-Run these from the `client/` directory, or from the repo root with `--filter client` (e.g. `pnpm --filter client dev`).
-
 ```sh
-pnpm dev          # Start dev server (https://windower.localhost)
-pnpm lint         # Lint and format
-pnpm test         # Run unit tests
-pnpm test:e2e     # Run end-to-end tests
-pnpm build        # Build for production
-pnpm preview      # Preview production build (https://windower-preview.localhost)
+swift test
+./scripts/build.sh
 ```
 
-End-to-end tests start their own preview server on port 4173. If that port is
-occupied, run `PLAYWRIGHT_PORT=4174 pnpm --filter client test:e2e` from the root
-with an available port.
+The app icon is vector artwork in `scripts/generate-icon.swift`. To regenerate its
+committed macOS icon resource:
+
+```sh
+xcrun swift scripts/generate-icon.swift
+iconutil -c icns build/Windower.iconset -o Resources/Windower.icns
+```
+
+Open `Package.swift` in Xcode to edit. Run the packaged app rather than the bare
+Swift executable when testing Accessibility and login items.
+
+The build uses ad-hoc signing for local use. A rebuild can require removing and
+re-adding Windower in Accessibility settings. To sign with an installed Developer
+ID identity, set `CODE_SIGN_IDENTITY` when running the build or install script.
+Distribution to other Macs would additionally need notarization.
+
+## Limits
+
+Apps can impose minimum window sizes, fixed aspect ratios, or resize increments;
+their constraints take precedence over the requested dimensions. Full-screen,
+nonresizable, and apps without standard Accessibility windows are unsupported.
+Errors appear in the menu and its icon tooltip. No screen recording or input
+monitoring permission is required.

@@ -1,39 +1,16 @@
-name: CI
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  # This enables you to run this workflow manually from the Actions tab.
-  workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
+name: Checks
+on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v3
-      - run: pnpm install
-      - run: pnpm --filter client lint
-
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v3
-      - run: pnpm install
-      - run: pnpm --filter client test
-
-  test-e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: jdx/mise-action@v3
-      - run: pnpm install
-      - run: pnpm --filter client exec playwright install --with-deps chromium
-      - run: pnpm --filter client test:e2e
+      - run: swift test
+      - run: ./scripts/build.sh
+      - run: ditto -c -k --keepParent build/Windower.app build/Windower.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Windower-arm64
+          path: build/Windower.zip
