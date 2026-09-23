@@ -1,0 +1,9 @@
+task id=3 status=done {
+    title "Upgrade frontend toolchain major versions"
+    created "2026-09-20T22:31:47.203058+00:00"
+    modified "2026-09-20T22:32:18.824574+00:00"
+    description "Upgrade Vite and Svelte plugin together, Vitest, Ky, and TypeScript 6. Keep official svelte-check, preserve seven-day release delay, adapt configuration, and run lint, unit tests, build, E2E and audit."
+    log {
+        entry ts="2026-09-20T22:32:18.816850+00:00" "Upgraded Vite 8.3.0, Svelte Vite plugin 7.3.0, Vitest 5.0.0, Ky 2.1.0, and TypeScript 6.0.3. Removed deprecated baseUrl from app/test tsconfigs and used vitest/config defineConfig for test option typing. Official svelte-check retained. Lint, app/config/test type checks, unit test, production build and E2E pass; audit reports no known vulnerabilities. Seven-day release delay preserved."
+    }
+}

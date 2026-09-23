@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+# Convenience environment variables, path configuration, and aliases for development shells.
+#
+# NOTE: This file is intended to be sourced rather than executed so that it can modify the running
+# shell environment. In short, add `source ~/path/to/repo/bin/env` to your `~/.zshrc`.
+repo_path="$(dirname "$(dirname "$0:A")")"
+repo_name="$(basename "$repo_path")"
+
+repo_name_capitalized="$(echo "$repo_name" | tr '[:lower:]' '[:upper:]')"
+export "$repo_name_capitalized=$repo_path"
+export PATH="${repo_path}/bin:${PATH}"
+
+alias "cd$repo_name=cd $repo_path"
+
+# NOTE: This will create a function named z<repo> that opens a Zellij pane with the zellij.kdl
+# configuration file.
+functions[z$repo_name]="
+    local tmp=\$(mktemp /tmp/zellij-$repo_name.XXXXXX)
+    REPO_NAME=$repo_name REPO_PATH=$repo_path envsubst < $repo_path/bin/zellij.kdl > \$tmp
+    zellij delete-session --force $repo_name 2>/dev/null
+    zellij -s $repo_name -n \$tmp
+    rm -f \$tmp
+"

@@ -1,0 +1,13 @@
+layout {
+    tab name="$REPO_NAME" split_direction="vertical" {
+        pane cwd="$REPO_PATH" command="claude" {
+            args "--dangerously-skip-permissions";
+        }
+        pane split_direction="horizontal" {
+            pane cwd="$REPO_PATH/client" command="zsh" {
+                args "-ic" "pnpm dev";
+            }
+            pane cwd="$REPO_PATH"
+        }
+    }
+}

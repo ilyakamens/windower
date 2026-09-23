@@ -1,0 +1,9 @@
+task id=2 status=done {
+    title "Update maintenance dependencies and build policy"
+    created "2026-09-20T22:26:55.084756+00:00"
+    modified "2026-09-20T22:27:22.134992+00:00"
+    description "Update dependencies within existing major versions, align Node types with Node 24, correct pnpm build approval settings, preserve the seven-day release delay, and verify lint, tests, build, E2E, and security audit."
+    log {
+        entry ts="2026-09-20T22:27:22.128154+00:00" "Updated compatible dependency ranges and lockfile, pnpm 10.34.5, Node 24 types, and allowBuilds policy. Verified with Node 24.21.0. Lint, unit test, production build, and Playwright E2E all pass. pnpm audit reports no known vulnerabilities. Seven-day minimum release age preserved."
+    }
+}
