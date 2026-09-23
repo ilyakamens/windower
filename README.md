@@ -59,6 +59,15 @@ re-adding Windower in Accessibility settings. To sign with an installed Develope
 ID identity, set `CODE_SIGN_IDENTITY` when running the build or install script.
 Distribution to other Macs would additionally need notarization.
 
+If macOS keeps requesting access even with Windower enabled, quit Windower,
+remove its entry from **Privacy & Security → Accessibility** (called **Device
+Control and Data Access** on macOS 27), then add the installed
+`~/Applications/Windower.app` again and enable it. Reopen Windower afterward.
+An ad-hoc rebuild can invalidate the previous grant while leaving its switch on.
+Use the same Apple-issued signing identity across builds to avoid this mismatch.
+Windower prompts automatically only on its first launch; later permission requests
+come from the menu's **Enable Accessibility…** action, never from shortcuts.
+
 ## Website and public releases
 
 The [companion site](https://ilyakamens.github.io/windower/) lives in `website/`

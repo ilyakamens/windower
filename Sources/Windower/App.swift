@@ -80,7 +80,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     if !hotKeys.failures.isEmpty { lastError = hotKeys.failures.joined(separator: "\n") }
     enableLoginOnFirstLaunch()
     refreshMenu()
-    if !WindowManager.hasAccess { WindowManager.requestAccess() }
+    let defaults = UserDefaults.standard
+    if !WindowManager.hasAccess && !defaults.bool(forKey: "didRequestAccessibility") {
+      defaults.set(true, forKey: "didRequestAccessibility")
+      WindowManager.requestAccess()
+    }
   }
 
   func applicationWillTerminate(_ notification: Notification) { hotKeys.unregister() }
@@ -108,7 +112,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     } catch {
       lastError = error.localizedDescription
       NSSound.beep()
-      if !WindowManager.hasAccess { WindowManager.requestAccess() }
     }
     refreshMenu()
   }
