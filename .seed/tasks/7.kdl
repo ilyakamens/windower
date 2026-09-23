@@ -1,0 +1,6 @@
+task id=7 status=todo {
+    title "Publish first notarized download"
+    created "2026-09-23T11:00:38.847899+00:00"
+    modified "2026-09-23T11:00:38.847899+00:00"
+    description "After the user enrolls in or confirms Apple Developer Program membership, install a Developer ID Application certificate and configure a notarytool keychain profile. Build and test a notarized archive with scripts/release.sh, publish its GitHub Release, and update website/release.json. No signing identities are currently installed; the website accurately shows the public download as unavailable."
+}

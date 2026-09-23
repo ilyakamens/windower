@@ -59,6 +59,21 @@ re-adding Windower in Accessibility settings. To sign with an installed Develope
 ID identity, set `CODE_SIGN_IDENTITY` when running the build or install script.
 Distribution to other Macs would additionally need notarization.
 
+## Website and public releases
+
+The [companion site](https://ilyakamens.github.io/windower/) lives in `website/`
+and uses plain HTML, CSS, and JavaScript. Changes to it on `main` deploy through
+the GitHub Pages workflow.
+Preview it with `python3 -m http.server 8080 --bind 127.0.0.1 --directory website`.
+`website/release.json` controls the download link; it stays unavailable until a
+public release is configured.
+
+See [distribution instructions](docs/distribution.md) for Developer ID setup,
+notarization, GitHub Releases, and website hosting. `scripts/release.sh` creates a
+verified, notarized ZIP once signing credentials are configured. It does not
+publish automatically. The current window-management implementation cannot run
+inside the sandbox required by the Mac App Store.
+
 ## Limits
 
 Apps can impose minimum window sizes, fixed aspect ratios, or resize increments;

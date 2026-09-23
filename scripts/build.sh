@@ -8,7 +8,11 @@ mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$binary_dir/Windower" "$app/Contents/MacOS/Windower"
 cp Resources/Info.plist "$app/Contents/Info.plist"
 cp Resources/Windower.icns "$app/Contents/Resources/Windower.icns"
-# Use a Developer ID when available; ad-hoc signing works for this local build.
-codesign --force --sign "${CODE_SIGN_IDENTITY:--}" --identifier com.ilyakamens.windower "$app"
+# Developer ID distribution requires hardened runtime and a secure timestamp.
+signing_options=(--force --sign "${CODE_SIGN_IDENTITY:--}")
+if [ "${CODE_SIGN_IDENTITY:--}" != "-" ]; then
+    signing_options+=(--options runtime --timestamp)
+fi
+codesign "${signing_options[@]}" --identifier com.ilyakamens.windower "$app"
 codesign --verify --strict "$app"
 printf 'Built %s\n' "$app"

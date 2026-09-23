@@ -1,0 +1,9 @@
+task id=6 status=in-progress {
+    title "Prepare website and direct distribution"
+    created "2026-09-23T10:56:00.556258+00:00"
+    modified "2026-09-23T11:00:38.874314+00:00"
+    description "Add a static download website beside the native Swift app, document App Store sandbox limitations, and prepare Developer ID signing and notarization workflow. Never present an ad-hoc development build as a notarized public release."
+    log {
+        entry ts="2026-09-23T11:00:38.874313+00:00" "Built static website and responsive six-action preview; verified preview geometry and release-link states in browser. Added Developer ID hardened-runtime/timestamp build options and fail-closed notarization/stapling/Gatekeeper packaging script. Ad-hoc local build and shell validation pass. Configured GitHub Pages; deploying next. User confirmed Pages hosting and no/uncertain Apple Developer membership. Public app release tracked separately."
+    }
+}
