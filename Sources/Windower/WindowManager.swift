@@ -12,7 +12,8 @@ final class WindowManager {
     _ = AXIsProcessTrustedWithOptions(options)
   }
 
-  func perform(_ action: WindowAction, application: NSRunningApplication?) throws {
+  func perform(_ action: WindowAction, application: NSRunningApplication?) async throws {
+    try Task.checkCancellation()
     guard Self.hasAccess else { throw WindowError("Enable Accessibility access for Windower.") }
     guard let application,
       application.processIdentifier != ProcessInfo.processInfo.processIdentifier
@@ -49,11 +50,20 @@ final class WindowManager {
     guard movable.boolValue else { throw WindowError("This window cannot be moved.") }
     guard resizable.boolValue else { throw WindowError("This window cannot be resized.") }
 
-    // Move between display bounds before resizing, then re-anchor using the accepted size.
-    try setPosition(target.origin, on: window)
+    // AX moves and resizes can animate; overlapping requests can undo each other.
+    if current.origin != target.origin {
+      try setPosition(target.origin, on: window)
+      try await Task.sleep(for: .milliseconds(300))
+    }
     try setSize(target.size, on: window)
-    let actualSize = frame(window)?.size ?? target.size
-    try setPosition(WindowGeometry.position(for: action, size: actualSize, in: bounds), on: window)
+    try await Task.sleep(for: .milliseconds(300))
+    guard let actual = frame(window) else {
+      throw WindowError("Cannot read this window’s position.")
+    }
+    let position = WindowGeometry.position(for: action, size: actual.size, in: bounds)
+    if actual.origin != position {
+      try setPosition(position, on: window)
+    }
   }
 
   private func attribute(_ element: AXUIElement, _ name: String) -> CFTypeRef? {

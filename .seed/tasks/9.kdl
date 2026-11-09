@@ -1,0 +1,10 @@
+task id=9 status=in-progress {
+    title "Fix directional window resizing"
+    created "2026-11-09T14:50:45.538242+00:00"
+    modified "2026-11-09T14:56:58.013211+00:00"
+    description "Investigate windows moving without resizing on directional shortcuts; ensure immediate half-screen snapping."
+    log {
+        entry ts="2026-11-09T14:51:32.669602+00:00" "Source already maps Control–Option–Command plus arrows to half-screen frames and writes both position and size. Installed binary also contains resize implementation. All seven geometry tests and release build pass. Could not reproduce the reported move-only behavior with UI automation; awaiting affected app and modifier keys before making a targeted fix."
+        entry ts="2026-11-09T14:56:58.013200+00:00" "Reproduced after user pressed Left in Messages: screenshot changed from 3024x948 to 1512x1422 pixels, while NSScreen reports a 1512x948-point work area at 2x. Added asynchronous 300ms separation between AX move/resize operations, skipped redundant moves, and cancel superseded operations. Seven geometry tests, release build, signature verification, and diff check pass. Installed candidate; awaiting live directional shortcut verification. Previous installation backed up at /var/folders/2l/k8tgmqqd13s8l67r7l0jnvrr0000gp/T/windower-backup.5ZznH5/Windower.app."
+    }
+}

@@ -20,6 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   private let menu = NSMenu()
   private let hotKeys = HotKeys()
   private let windows = WindowManager()
+  private var windowTask: Task<Void, Never>?
   private var selectedApplication: NSRunningApplication?
   private var lastError: String?
   private let accessItem = NSMenuItem(
@@ -87,7 +88,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
   }
 
-  func applicationWillTerminate(_ notification: Notification) { hotKeys.unregister() }
+  func applicationWillTerminate(_ notification: Notification) {
+    windowTask?.cancel()
+    hotKeys.unregister()
+  }
 
   func menuWillOpen(_ menu: NSMenu) {
     selectedApplication = NSWorkspace.shared.frontmostApplication
@@ -106,14 +110,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
   }
 
   private func perform(_ action: WindowAction, application: NSRunningApplication?) {
-    do {
-      try windows.perform(action, application: application)
-      lastError = hotKeys.failures.isEmpty ? nil : hotKeys.failures.joined(separator: "\n")
-    } catch {
-      lastError = error.localizedDescription
-      NSSound.beep()
+    windowTask?.cancel()
+    windowTask = Task {
+      do {
+        try await windows.perform(action, application: application)
+        lastError = hotKeys.failures.isEmpty ? nil : hotKeys.failures.joined(separator: "\n")
+      } catch is CancellationError {
+        return
+      } catch {
+        lastError = error.localizedDescription
+        NSSound.beep()
+      }
+      refreshMenu()
     }
-    refreshMenu()
   }
 
   @objc private func runMenuAction(_ sender: NSMenuItem) {
